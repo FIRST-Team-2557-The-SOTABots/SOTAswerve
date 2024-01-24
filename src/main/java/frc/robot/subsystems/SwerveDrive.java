@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import java.util.Optional;
 
-import javax.swing.text.html.Option;
-
 import SOTAlib.Gyro.SOTA_Gyro;
 import SOTAlib.Math.Conversions;
 import SOTAlib.MotorController.NullConfigException;
@@ -11,11 +9,10 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.configs.SweveDriveConfig;
+import frc.robot.subsystems.configs.SwerveDriveConfig;
 
 public class SwerveDrive extends SubsystemBase {
     private SwerveDriveKinematics mDriveKinematics;
@@ -26,11 +23,10 @@ public class SwerveDrive extends SubsystemBase {
     private double MAX_SPEED;
 
     private ShuffleboardTab sTab;
-    private GenericEntry gyroPositioEntry;
     private double MAX_ROTATIONAL_VELOCITY;
 
     public SwerveDrive(SwerveModule[] modules, SwerveDriveKinematics driveKinematics, SOTA_Gyro gyro,
-            SweveDriveConfig config) throws NullConfigException {
+            SwerveDriveConfig config) throws NullConfigException {
         this.modules = modules;
         this.mDriveKinematics = driveKinematics;
         this.mGyro = gyro;
