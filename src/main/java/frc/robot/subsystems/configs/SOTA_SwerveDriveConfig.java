@@ -1,6 +1,6 @@
 package frc.robot.subsystems.configs;
 
-public class SwerveDriveConfig {
+public class SOTA_SwerveDriveConfig {
     /**
      * Wheel Base (wheel distance front to back) in inches
      */

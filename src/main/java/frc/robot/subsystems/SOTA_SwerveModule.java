@@ -8,10 +8,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.subsystems.configs.SwerveDriveConfig;
-import frc.robot.subsystems.configs.SwerveModuleConfig;
+import frc.robot.subsystems.configs.SOTA_SwerveDriveConfig;
+import frc.robot.subsystems.configs.SOTA_SwerveModuleConfig;
 
-public class SwerveModule {
+public class SOTA_SwerveModule {
     private String moduleName;
     private double kWheelCircumfrence;
     private double kGearRatio;
@@ -24,7 +24,7 @@ public class SwerveModule {
     private PIDController speedPID;
     private SimpleMotorFeedforward speedFF;
 
-    public SwerveModule(SwerveDriveConfig driveConfig, SwerveModuleConfig moduleConfig, SOTA_MotorController angleMotor, SOTA_AbsoulteEncoder angleEncoder,
+    public SOTA_SwerveModule(SOTA_SwerveDriveConfig driveConfig, SOTA_SwerveModuleConfig moduleConfig, SOTA_MotorController angleMotor, SOTA_AbsoulteEncoder angleEncoder,
             SOTA_MotorController speedMotor) throws NullConfigException {
                 if(driveConfig == null) {
                     throw new NullConfigException("Swerve Module: No driveConfig");

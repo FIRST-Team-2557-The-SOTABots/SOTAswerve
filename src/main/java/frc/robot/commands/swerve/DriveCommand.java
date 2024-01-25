@@ -4,15 +4,15 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.SOTA_SwerveDrive;
 
 public class DriveCommand extends Command {
-    private SwerveDrive mSwerveDrive;
+    private SOTA_SwerveDrive mSwerveDrive;
     private DoubleSupplier frwdSup;
     private DoubleSupplier strfSup;
     private DoubleSupplier rttnSup;
 
-    public DriveCommand(SwerveDrive swerveDrive, DoubleSupplier frwdSup, DoubleSupplier strfSup, DoubleSupplier rttnSup) {
+    public DriveCommand(SOTA_SwerveDrive swerveDrive, DoubleSupplier frwdSup, DoubleSupplier strfSup, DoubleSupplier rttnSup) {
         this.mSwerveDrive = swerveDrive;
         this.frwdSup = frwdSup;
         this.strfSup = strfSup;

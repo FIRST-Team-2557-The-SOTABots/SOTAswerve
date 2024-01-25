@@ -12,11 +12,11 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.configs.SwerveDriveConfig;
+import frc.robot.subsystems.configs.SOTA_SwerveDriveConfig;
 
-public class SwerveDrive extends SubsystemBase {
+public class SOTA_SwerveDrive extends SubsystemBase {
     private SwerveDriveKinematics mDriveKinematics;
-    private SwerveModule[] modules;
+    private SOTA_SwerveModule[] modules;
     private SOTA_Gyro mGyro;
     private boolean fieldCentric;
 
@@ -25,8 +25,8 @@ public class SwerveDrive extends SubsystemBase {
     private ShuffleboardTab sTab;
     private double MAX_ROTATIONAL_VELOCITY;
 
-    public SwerveDrive(SwerveModule[] modules, SwerveDriveKinematics driveKinematics, SOTA_Gyro gyro,
-            SwerveDriveConfig config) throws NullConfigException {
+    public SOTA_SwerveDrive(SOTA_SwerveModule[] modules, SwerveDriveKinematics driveKinematics, SOTA_Gyro gyro,
+            SOTA_SwerveDriveConfig config) throws NullConfigException {
         this.modules = modules;
         this.mDriveKinematics = driveKinematics;
         this.mGyro = gyro;
