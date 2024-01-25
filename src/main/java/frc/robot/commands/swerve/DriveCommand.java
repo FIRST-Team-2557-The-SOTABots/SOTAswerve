@@ -12,13 +12,14 @@ public class DriveCommand extends Command {
     private DoubleSupplier strfSup;
     private DoubleSupplier rttnSup;
 
-    public DriveCommand(SOTA_SwerveDrive swerveDrive, DoubleSupplier frwdSup, DoubleSupplier strfSup, DoubleSupplier rttnSup) {
+    public DriveCommand(SOTA_SwerveDrive swerveDrive, DoubleSupplier frwdSup, DoubleSupplier strfSup,
+            DoubleSupplier rttnSup) {
         this.mSwerveDrive = swerveDrive;
         this.frwdSup = frwdSup;
         this.strfSup = strfSup;
         this.rttnSup = rttnSup;
 
-        addRequirements(swerveDrive);
+        addRequirements(mSwerveDrive);
     }
 
     @Override

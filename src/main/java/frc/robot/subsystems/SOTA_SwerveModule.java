@@ -35,7 +35,7 @@ public class SOTA_SwerveModule {
                 }
 
                 this.moduleName = moduleConfig.getModuleName();
-                this.kWheelCircumfrence = driveConfig.getWheelCircumfrence();
+                this.kWheelCircumfrence = driveConfig.getWheelDiameter();
                 this.kGearRatio = driveConfig.getGearRatio();
 
                 this.angleMotor = angleMotor;

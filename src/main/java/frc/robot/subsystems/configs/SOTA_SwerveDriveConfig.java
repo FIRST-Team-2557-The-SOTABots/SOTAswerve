@@ -1,5 +1,7 @@
 package frc.robot.subsystems.configs;
 
+import edu.wpi.first.math.geometry.Translation2d;
+
 public class SOTA_SwerveDriveConfig {
     /**
      * Wheel Base (wheel distance front to back) in inches
@@ -62,14 +64,27 @@ public class SOTA_SwerveDriveConfig {
     private double speedKs;
 
     /**
-     * Circumfrence of the swerve wheels in inches
+     * diameter of the swerve wheels in inches
      */
-    private double wheelCircumfrence;
+    private double wheelDiameter;
 
     /**
      * Ratio between the speed motor and the wheel output
      */
     private double gearRatio;
+
+    /**
+     * Order Front right, Front left, Back Left, Back Right
+     */
+    public Translation2d[] generateModuleTranslations() {
+        Translation2d[] moduleTranslations = {
+                new Translation2d(getWheelBase() / 2, -getTrackWidth() / 2),
+                new Translation2d(getWheelBase() / 2, getTrackWidth() / 2),
+                new Translation2d(-getWheelBase() / 2, getTrackWidth() / 2),
+                new Translation2d(-getWheelBase() / 2, -getTrackWidth() / 2)
+        };
+        return moduleTranslations;
+    }
 
     /**
      * @return math rotational velocity of the robot in radians per second
@@ -131,8 +146,8 @@ public class SOTA_SwerveDriveConfig {
         return speedKs;
     }
 
-    public double getWheelCircumfrence() {
-        return wheelCircumfrence;
+    public double getWheelDiameter() {
+        return wheelDiameter;
     }
 
     public double getGearRatio() {
