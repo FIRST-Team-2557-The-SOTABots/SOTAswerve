@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.subsystems.configs.SOTA_SwerveDriveConfig;
 import frc.robot.subsystems.configs.SOTA_SwerveModuleConfig;
 
@@ -41,10 +42,12 @@ public class SOTA_SwerveModule {
                 this.angleMotor = angleMotor;
                 this.angleEncoder = angleEncoder;
                 this.anglePID = new PIDController(driveConfig.getAngleP(), driveConfig.getAngleI(), driveConfig.getAngleD());
+                anglePID.enableContinuousInput(0, 1);
 
                 this.speedMotor = speedMotor;
                 this.speedPID = new PIDController(driveConfig.getSpeedP(), driveConfig.getSpeedI(),driveConfig.getSpeedD());
                 this.speedFF = new SimpleMotorFeedforward(driveConfig.getSpeedKs(), driveConfig.getSpeedKv());
+                Shuffleboard.getTab("Swerve").addNumber("Swerve Angle" + moduleName, this.angleEncoder::getConstrainedPositon);
     }
 
     public void setModule(SwerveModuleState swerveModuleState) {

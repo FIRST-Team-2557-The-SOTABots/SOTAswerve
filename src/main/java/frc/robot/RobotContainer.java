@@ -82,8 +82,8 @@ public class RobotContainer {
         swerveModuleConfigPath);
     SOTA_CompositeMotor angleSystem = lCompositeMotorFactory.generateCompositeMotor(moduleConfig.getAngleSystem());
     SOTA_MotorController speedMotor = MotorControllerFactory.generateMotorController(moduleConfig.getSpeedConfig());
-    return new SOTA_SwerveModule(driveConfig, moduleConfig, speedMotor, angleSystem.getAbsEncoder(),
-        angleSystem.getMotor());
+    return new SOTA_SwerveModule(driveConfig, moduleConfig, angleSystem.getMotor(), angleSystem.getAbsEncoder(),
+        speedMotor);
 
   }
 }
