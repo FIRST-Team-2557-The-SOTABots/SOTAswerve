@@ -65,10 +65,13 @@ public class RobotContainer {
 
   private void configureDefaultCommands() {
     mSwerveDrive.setDefaultCommand(
-        new DriveCommand(mSwerveDrive, dController::getLeftY, dController::getLeftX, dController::getRightY));
+        new DriveCommand(mSwerveDrive, dController::getLeftY, dController::getLeftX, dController::getRightX));
   }
 
   private void configureBindings() {
+    dController.leftBumper().onTrue(Commands.runOnce(() -> mSwerveDrive.setFieldCentric(false), mSwerveDrive));
+    dController.rightBumper().onTrue(Commands.runOnce(() -> mSwerveDrive.setFieldCentric(true), mSwerveDrive));
+    dController.start().onTrue(Commands.runOnce(() -> mSwerveDrive.resetHeading(), mSwerveDrive));
   }
 
   public Command getAutonomousCommand() {
