@@ -27,7 +27,7 @@ public class DriveCommand extends Command {
         double strf = Math.signum(strfSup.getAsDouble()) * strfSup.getAsDouble() * strfSup.getAsDouble();
         double rttn = Math.signum(rttnSup.getAsDouble()) * rttnSup.getAsDouble() * rttnSup.getAsDouble();
 
-        mSwerveDrive.drive(frwd, strf, -rttn);
+        mSwerveDrive.drive(-frwd, -strf, -rttn);
     }
 
 }

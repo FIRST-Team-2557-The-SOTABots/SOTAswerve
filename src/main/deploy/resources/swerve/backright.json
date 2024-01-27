@@ -18,7 +18,7 @@
     },
     "speedConfig": {
         "port": 7,
-        "isInverted": false,
+        "isInverted": true,
         "motorModel": "SparkMax",
         "motorType": "BRUSHLESS",
         "neutralOperation": "BRAKE",
