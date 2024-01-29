@@ -154,4 +154,8 @@ public class SOTA_SwerveDriveConfig {
         return this.gearRatio;
     }
 
+    public double getDriveBaseRadius() {
+        return Math.sqrt(Math.pow(trackWidth / 2, 2) + Math.pow(wheelBase / 2, 2));
+    }
+
 }

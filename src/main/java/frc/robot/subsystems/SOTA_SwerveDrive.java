@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import SOTAlib.Gyro.SOTA_Gyro;
 import SOTAlib.Math.Conversions;
@@ -14,6 +16,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -48,7 +51,22 @@ public class SOTA_SwerveDrive extends SubsystemBase {
                 .ifPresent((maxRttn) -> this.MAX_ROTATIONAL_VELOCITY = maxRttn);
 
         this.mDriveOdometry = new SwerveDriveOdometry(mDriveKinematics, mGyro.getRotation2d(), getModulePositions());
-        AutoBuilder.configureHolonomic(null, null, null, null, null, null, null);
+        AutoBuilder.configureHolonomic(this::getPose, this::resetPose, this::getRelativeSpeeds,
+                this::robotRelativeDrive,
+                new HolonomicPathFollowerConfig(Conversions.feetPerSecToMetersPerSec(MAX_SPEED),
+                        config.getDriveBaseRadius(), new ReplanningConfig()),
+                () -> {
+                    // Boolean supplier that controls when the path will be mirrored for the red
+                    // alliance
+                    // This will flip the path being followed to the red side of the field.
+                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
+                }, this);
         this.sTab = Shuffleboard.getTab("Swerve");
         sTab.addNumber("Gyro Heading: ", mGyro::getAngle);
         sTab.addBoolean("FieldCentric Active: ", this::getFieldCentric);
@@ -58,7 +76,7 @@ public class SOTA_SwerveDrive extends SubsystemBase {
     private SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
 
-        for(int i = 0; i < modules.length; i++) {
+        for (int i = 0; i < modules.length; i++) {
             positions[i] = modules[i].getModulePosition();
         }
 
@@ -77,6 +95,15 @@ public class SOTA_SwerveDrive extends SubsystemBase {
         strf = MathUtil.clamp(strf, -1, 1) * Conversions.feetPerSecToMetersPerSec(MAX_SPEED);
         rttn = MathUtil.clamp(rttn, -1, 1) * MAX_ROTATIONAL_VELOCITY;
         drive(new ChassisSpeeds(frwrd, strf, rttn));
+    }
+
+    public void robotRelativeDrive(ChassisSpeeds robotRelative) {
+        SwerveModuleState[] states = mDriveKinematics.toSwerveModuleStates(robotRelative);
+        SwerveDriveKinematics.desaturateWheelSpeeds(states, Conversions.feetPerSecToMetersPerSec(MAX_SPEED));
+
+        for (int i = 0; i < states.length; i++) {
+            modules[i].setModule(states[i]);
+        }
     }
 
     /**
@@ -124,6 +151,26 @@ public class SOTA_SwerveDrive extends SubsystemBase {
     @Override
     public void periodic() {
         currentPose = mDriveOdometry.update(mGyro.getRotation2d(), getModulePositions());
+    }
+
+    private Pose2d getPose() {
+        return currentPose;
+    }
+
+    public void resetPose(Pose2d newPose) {
+        mDriveOdometry.resetPosition(mGyro.getRotation2d(), getModulePositions(), newPose);
+    }
+
+    private ChassisSpeeds getRelativeSpeeds() {
+        return mDriveKinematics.toChassisSpeeds(getModuleStates());
+    }
+
+    private SwerveModuleState[] getModuleStates() {
+        SwerveModuleState[] states = new SwerveModuleState[modules.length];
+        for (int i = 0; i < modules.length; i++) {
+            states[i] = modules[i].getState();
+        }
+        return states;
     }
 
 }

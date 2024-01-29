@@ -83,4 +83,8 @@ public class SOTA_SwerveModule {
         return new SwerveModulePosition(getDistanceMeters(), getCurrentAngle());
     }
 
+    public SwerveModuleState getState() {
+        return new SwerveModuleState(Conversions.rpmToMetersPerSec(speedMotor.getEncoderVelocity(), kWheelDiameter, kGearRatio), getCurrentAngle());
+    }
+
 }
