@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
 
 import SOTAlib.Config.ConfigUtils;
 import SOTAlib.Control.SOTA_Xboxcontroller;
@@ -17,6 +18,8 @@ import SOTAlib.MotorController.SOTA_CompositeMotor;
 import SOTAlib.MotorController.SOTA_MotorController;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.swerve.DriveCommand;
@@ -27,6 +30,7 @@ import frc.robot.subsystems.configs.SOTA_SwerveModuleConfig;
 
 public class RobotContainer {
   private ConfigUtils mConfigUtils;
+  private final SendableChooser<Command> autoChooser;
 
   private SOTA_Xboxcontroller dController;
   private SOTA_Gyro mGyro;
@@ -60,6 +64,9 @@ public class RobotContainer {
       // TODO: handle exception
     }
 
+    this.autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+
     configureBindings();
   }
 
@@ -75,7 +82,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return autoChooser.getSelected();
   }
 
   private SOTA_SwerveModule initModule(ConfigUtils lConfigUtils, CompositeMotorFactory lCompositeMotorFactory,
