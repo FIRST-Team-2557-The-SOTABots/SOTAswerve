@@ -2,12 +2,17 @@ package frc.robot.subsystems;
 
 import java.util.Optional;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import SOTAlib.Gyro.SOTA_Gyro;
 import SOTAlib.Math.Conversions;
 import SOTAlib.MotorController.NullConfigException;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -16,9 +21,11 @@ import frc.robot.subsystems.configs.SOTA_SwerveDriveConfig;
 
 public class SOTA_SwerveDrive extends SubsystemBase {
     private SwerveDriveKinematics mDriveKinematics;
+    private SwerveDriveOdometry mDriveOdometry;
     private SOTA_SwerveModule[] modules;
     private SOTA_Gyro mGyro;
     private boolean fieldCentric;
+    private Pose2d currentPose;
 
     private double MAX_SPEED;
 
@@ -40,9 +47,22 @@ public class SOTA_SwerveDrive extends SubsystemBase {
         Optional.ofNullable(config.getMaxRotationalVelocity())
                 .ifPresent((maxRttn) -> this.MAX_ROTATIONAL_VELOCITY = maxRttn);
 
+        this.mDriveOdometry = new SwerveDriveOdometry(mDriveKinematics, mGyro.getRotation2d(), getModulePositions());
+        AutoBuilder.configureHolonomic(null, null, null, null, null, null, null);
         this.sTab = Shuffleboard.getTab("Swerve");
         sTab.addNumber("Gyro Heading: ", mGyro::getAngle);
         sTab.addBoolean("FieldCentric Active: ", this::getFieldCentric);
+
+    }
+
+    private SwerveModulePosition[] getModulePositions() {
+        SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
+
+        for(int i = 0; i < modules.length; i++) {
+            positions[i] = modules[i].getModulePosition();
+        }
+
+        return positions;
     }
 
     /**
@@ -82,6 +102,7 @@ public class SOTA_SwerveDrive extends SubsystemBase {
      */
     public void resetHeading() {
         mGyro.resetAngle();
+        mDriveOdometry.resetPosition(mGyro.getRotation2d(), getModulePositions(), currentPose);
     }
 
     /**
@@ -93,10 +114,16 @@ public class SOTA_SwerveDrive extends SubsystemBase {
 
     /**
      * Set the state of field centric driving
+     * 
      * @param fieldCentric true for enabled
      */
     public void setFieldCentric(boolean fieldCentric) {
         this.fieldCentric = fieldCentric;
+    }
+
+    @Override
+    public void periodic() {
+        currentPose = mDriveOdometry.update(mGyro.getRotation2d(), getModulePositions());
     }
 
 }
