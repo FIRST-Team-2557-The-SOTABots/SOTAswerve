@@ -1,5 +1,6 @@
 package frc.robot.subsystems.configs;
 
+import SOTAlib.Math.Conversions;
 import edu.wpi.first.math.geometry.Translation2d;
 
 public class SOTA_SwerveDriveConfig {
@@ -78,10 +79,10 @@ public class SOTA_SwerveDriveConfig {
      */
     public Translation2d[] generateModuleTranslations() {
         Translation2d[] moduleTranslations = {
-                new Translation2d(getWheelBase() / 2, -getTrackWidth() / 2),
-                new Translation2d(getWheelBase() / 2, getTrackWidth() / 2),
-                new Translation2d(-getWheelBase() / 2, getTrackWidth() / 2),
-                new Translation2d(-getWheelBase() / 2, -getTrackWidth() / 2)
+                new Translation2d(getWheelBaseMeters() / 2, -getTrackWidthMeters() / 2),
+                new Translation2d(getWheelBaseMeters() / 2, getTrackWidthMeters() / 2),
+                new Translation2d(-getWheelBaseMeters() / 2, getTrackWidthMeters() / 2),
+                new Translation2d(-getWheelBaseMeters() / 2, -getTrackWidthMeters() / 2)
         };
         return moduleTranslations;
     }
@@ -156,6 +157,14 @@ public class SOTA_SwerveDriveConfig {
 
     public double getDriveBaseRadius() {
         return Math.sqrt(Math.pow(trackWidth / 2, 2) + Math.pow(wheelBase / 2, 2));
+    }
+
+    public double getWheelBaseMeters() {
+        return Conversions.inchesToMeters(wheelBase);
+    }
+
+    public double getTrackWidthMeters() {
+        return Conversions.inchesToMeters(trackWidth);
     }
 
 }
