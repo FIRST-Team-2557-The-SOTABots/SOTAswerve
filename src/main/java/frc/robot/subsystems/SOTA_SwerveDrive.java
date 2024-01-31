@@ -19,6 +19,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.configs.SOTA_SwerveDriveConfig;
 
@@ -29,6 +31,7 @@ public class SOTA_SwerveDrive extends SubsystemBase {
     private SOTA_Gyro mGyro;
     private boolean fieldCentric;
     private Pose2d currentPose;
+    private Field2d mField2d;
 
     private double MAX_SPEED;
 
@@ -67,9 +70,13 @@ public class SOTA_SwerveDrive extends SubsystemBase {
                     }
                     return false;
                 }, this);
+
+        mField2d = new Field2d();
         this.sTab = Shuffleboard.getTab("Swerve");
         sTab.addNumber("Gyro Heading: ", mGyro::getAngle);
         sTab.addBoolean("FieldCentric Active: ", this::getFieldCentric);
+        sTab.addNumber("Live Speed", () -> {return this.getRelativeSpeeds().omegaRadiansPerSecond;});
+        sTab.add(mField2d);
 
     }
 
@@ -115,9 +122,9 @@ public class SOTA_SwerveDrive extends SubsystemBase {
         if (fieldCentric) {
             speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, mGyro.getRotation2d());
         }
-
+        
         SwerveModuleState[] states = mDriveKinematics.toSwerveModuleStates(speeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(states, Conversions.feetPerSecToMetersPerSec(MAX_SPEED));
+                SwerveDriveKinematics.desaturateWheelSpeeds(states, Conversions.feetPerSecToMetersPerSec(MAX_SPEED));
 
         for (int i = 0; i < states.length; i++) {
             modules[i].setModule(states[i]);
@@ -151,6 +158,7 @@ public class SOTA_SwerveDrive extends SubsystemBase {
     @Override
     public void periodic() {
         currentPose = mDriveOdometry.update(mGyro.getRotation2d(), getModulePositions());
+        mField2d.setRobotPose(currentPose);
     }
 
     private Pose2d getPose() {

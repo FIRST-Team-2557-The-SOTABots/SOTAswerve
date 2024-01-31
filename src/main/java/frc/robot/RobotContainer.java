@@ -61,7 +61,7 @@ public class RobotContainer {
       configureDefaultCommands();
 
     } catch (Exception e) {
-      // TODO: handle exception
+      e.printStackTrace();
     }
 
     this.autoChooser = AutoBuilder.buildAutoChooser();
